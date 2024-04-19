@@ -23,18 +23,35 @@ size_t binary_tree_height(const binary_tree_t *tree)
 }
 
 /**
- * binary_tree_leaves - Counts the leaves in a binary tree
+ * binary_tree_balance - balance
  * @tree: Pointer to the root node of the tree.
- * Return: Number of leaves. If the tree is NULL, return 0.
+ * Return: balance factor
  */
-size_t binary_tree_leaves(const binary_tree_t *tree)
+int binary_tree_balance(const binary_tree_t *tree)
 {
 	if (!tree)
 		return (0);
-	if (!tree->left && !tree->right)
+	return (binary_tree_height(tree->left) -
+			binary_tree_balance(tree->right));
+}
+
+/**
+ * perfectt - checks if a subtree is perfect
+ * @tree: pointer to the root
+ * Return; 1 or 0
+ */
+
+int perfectt(const binary_tree_t *tree)
+{
+	if (tree && !tree->right & !tree->left)
+	{
 		return (1);
-	return (binary_tree_leaves(tree->left) +
-			binary_tree_leaves(tree->right));
+	}
+	if (tree && tree->right && tree->left)
+	{
+		return (1 && perfectt(tree->left) && perfectt(tree->right));
+	}
+	return (0);
 }
 
 /**
@@ -44,17 +61,13 @@ size_t binary_tree_leaves(const binary_tree_t *tree)
  */
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	size_t check, height;
-
 	if (tree == NULL)
 	{
 		return (0);
 	}
-	height = binary_tree_height(tree);
-	check = 2 << (height - 1);
-	if (check == binary_tree_leaves(tree) || height == 0)
-		return (1);
-	return (0);
+	if (binary_tree_balance(tree) != 0)
+		return (0);
+	return (perfectt(tree->left) && perfectt(tree->right));
 
 }
 
